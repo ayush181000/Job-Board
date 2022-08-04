@@ -1,4 +1,5 @@
 const fs = require('fs');
+const path = require('path');
 const { ApolloServer, gql } = require('apollo-server-express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
@@ -20,9 +21,12 @@ app.use(
   })
 );
 
+app.use(express.static(path.join(__dirname + '/public')));
+
 // graphql support
 const typeDefs = gql(fs.readFileSync('./schema.graphql', { encoding: 'utf8' }));
 const resolvers = require('./resolvers');
+
 const context = ({ req }) => ({
   user: req.user && db.users.get(req.user.sub),
 });
